@@ -10,7 +10,10 @@ const PORT = process.env.PORT || 5001;
 
 
 app.use(cors({
-  origin: "http://localhost:3000", 
+  origin: [
+    "http://localhost:3000",
+    "https://cv-tech-front.onrender.com/"
+  ], 
   credentials: true,
 }));
 
