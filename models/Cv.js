@@ -5,8 +5,8 @@ const cvSchema = new mongoose.Schema({
   nom: { type: String, required: true },
   prenom: { type: String, required: true },
   description: { type: String, required: true, minlength: 10 },
-  experiencePedagogique: { type: String, required: true },
-  experiencePro: { type: String, required: true },
+  experiencePedagogique: { type: [String], required: true },
+  experiencePro: { type: [String], required: true },
   is_visible: { type: Number, required: true }
 });
 
