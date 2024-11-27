@@ -17,6 +17,8 @@ const {
   detailsCv,
   giveRecommandationCv,
   listeRecommandationCv,
+  getRecommandationCv,
+  deleteRecommendation
 } = require("../controllers/cvController");
 const { verifyToken } = require("../middlewares/authMiddleware");
 const router = express.Router();
@@ -157,7 +159,7 @@ router.get("/list-recommandation-cv/:idCv", verifyToken, listeRecommandationCv);
 
 /**
  * @swagger
- * /api/cv/list-recommandation-cv:
+ * /api/cv/get-recommendations:
  *   get:
  *     tags:
  *       - Recommendations
@@ -168,6 +170,32 @@ router.get("/list-recommandation-cv/:idCv", verifyToken, listeRecommandationCv);
  *       200:
  *         description: List of all recommendations
  */
-router.get("/list-recommandation-cv", verifyToken, listeRecommandationCv);
+router.get("/get-recommendations", verifyToken, getRecommandationCv, (req, res) => {
+  getRecommandationCv(req, res);
+});
+
+
+/**
+ * @swagger
+ * /api/cv/delete-recommendation/{id}:
+ *   delete:
+ *     tags:
+ *       - Recommendations
+ *     summary: Delete a recommendation
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Recommendation deleted successfully
+ */
+router.delete("/delete-recommendation/:id", verifyToken, (req, res) => {
+  deleteRecommendation(req, res);
+});
 
 module.exports = router;

@@ -231,28 +231,43 @@ exports.listeRecommandationCv = async (req, res) => {
     });
   }
 
-  exports.listeRecommandationCv = async (req, res) => {
-    const token = req.headers.authorization?.split(' ')[1];
-  
-    if (!token) {
-      return res.status(401).json({ message: "Token manquant ou invalide." });
-    }
-  
-    try {
-      const decodedToken = jwt.decode(token);
-      const userId = decodedToken.id;  // L'ID de l'utilisateur connecté
-  
-      const recommendations = await Recommandation.find({ userId });
-  
-      if (recommendations.length === 0) {
-        return res.status(404).json({ message: "Aucune recommandation trouvée pour cet utilisateur." });
-      }
-  
-      return res.status(200).json({ recommantation: recommendations });
-    } catch (error) {
-      console.error(error);
-      return res.status(500).json({ message: "Erreur lors du chargement des recommandations." });
-    }
-  };  
+};
 
+exports.getRecommandationCv = async (req, res) => {
+  try {
+    const token = req.header("Authorization")?.replace("Bearer ", "");
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const userId = decoded.id;
+
+    const recommandations = await Recommandation.find({ userId });
+
+    if (recommandations.length === 0) {
+      return res.status(404).json({ message: "Aucune recommandation trouvée." });
+    }
+
+    res.status(200).json({ recommandations });
+  } catch (err) {
+    res.status(500).json({
+      message: "Erreur serveur",
+      error: err.message,
+    });
+  }
+};
+
+exports.deleteRecommendation = async (req, res) => {
+  const recommendationId = req.params.id;
+
+  try {
+    const recommendation = await Recommandation.findById(recommendationId);
+    if (!recommendation) {
+      return res.status(404).json({ message: "Recommandation non trouvée." });
+    }
+
+    await Recommandation.findByIdAndDelete(recommendationId);
+    return res.status(200).json({ message: "Recommandation supprimée avec succès." });
+  }
+  catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: "Erreur lors de la suppression de la recommandation." });
+  }
 };
