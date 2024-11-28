@@ -6,7 +6,7 @@
  */
 
 const express = require("express");
-const { getUser } = require("../controllers/userController");
+const { getUser, updateUser } = require("../controllers/userController");
 const { verifyToken } = require("../middlewares/authMiddleware");
 const router = express.Router();
 
@@ -46,5 +46,28 @@ const router = express.Router();
  *         description: Utilisateur non trouvé
  */
 router.get("/:id", verifyToken, getUser);
+
+
+/**
+ * @swagger
+ * /api/user/updateUser/{id}:
+ *   put:
+ *     tags:
+ *       - User
+ *     summary: Update username
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: User updated successfully
+ */
+router.put("/updateUser/:id", verifyToken, updateUser);
+
 
 module.exports = router;

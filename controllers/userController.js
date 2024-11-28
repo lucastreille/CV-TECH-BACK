@@ -14,3 +14,27 @@ exports.getUser = async (req, res) => {
     
   }
 };
+
+
+exports.updateUser = async (req, res) => {
+  try {
+    const { username } = req.body;
+
+    const user = await User.findById(req.params.id);
+    if (!user) {
+      return res.status(404).json({ message: "Utilisateur non trouvé" });
+    }
+
+    user.username = username || user.username;
+
+    const updatedUser = await user.save();
+
+    const userWithoutPassword = updatedUser.toObject();
+    delete userWithoutPassword.password;
+
+    res.json(userWithoutPassword);
+
+  } catch (err) {
+    res.status(500).json({ message: "Erreur serveur", error: err.message });
+  }
+};
