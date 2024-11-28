@@ -159,7 +159,7 @@ exports.detailsCv = async (req, res) => {
 
   try {
 
-    const visibleCV = await CV.findOne({ _id: cvId, is_visible: 1 });
+    const visibleCV = await CV.findOne({ _id: cvId});
 
     if (!visibleCV) {
       return res.status(404).json({ message: "CV non trouvé ou non visible." });
